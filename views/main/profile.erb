@@ -1,0 +1,496 @@
+
+<script type="text/javascript">
+	window.onload = geoFindMe;
+</script>
+
+<nav>
+  <div class="nav-wrapper">
+	<a href="#!" class="brand-logo">Matcha - <%= @user['username'] %></a>
+	<ul class="right hide-on-med-and-down">
+		<!-- Dropdown Trigger -->
+		  <a class='dropdown-button btn' href='' <% if !@new %> onclick="window.location.reload(true)" <% end %> data-activates='dropdown1'>
+		  <% if @new %>
+			  <span class="new badge" data-badge-caption="New notifications"></span>
+		  <% else %>
+			  Notifications
+ 		  <% end %></a>
+
+		<!-- Dropdown Structure -->
+		<ul id='dropdown1' class='dropdown-content'>
+			<% @notifications.each do |notif| %>
+			  <li><a href="<%= notif['link'] %>"><%= notif['notification'] %></a></li>
+			<% end %>
+		</ul>
+		<li><a href="/users/log_out"><i class="material-icons left">input</i>Log out</a></li>
+	</ul>
+  </div>
+</nav>
+
+
+<% flash.each do |flash| %>
+	<p><%= flash[1] %><p>
+<% end %>
+
+	<!-- Modal Structure -->
+	<div id="modal1" class="modal">
+		<div class="modal-content">
+			<h2>My informations</h2>
+			<p>Modify my informations</p>
+			<form class="col s12" action="/update_info" method="post">
+			  <div class="row">
+				<div class="input-field col s6">
+					<h5>Sexe</h5>
+					<input name="sexe" type="radio" id="men" value="men" <% if session[:auth]['sexe'] == "men" %>
+					  <%= "checked" %>
+				   <% end %>/>
+       				<label for="men">Men</label>
+					<input name="sexe" type="radio" id="women" value="women" <% if session[:auth]['sexe'] == "women" %>
+					  <%= "checked" %>
+				   <% end %>/>
+       				<label for="women">Women</label>
+				</div>
+				<div class="input-field col s6">
+					<h5>Orientation</h5>
+
+	  				  <input name="orientation" type="radio" id="hetero" value="Hetero" <% if session[:auth]['orientation'] == "Hetero" %>
+  					 	<%= "checked" %>
+  					 <% end %>/>
+	  				  <label for="hetero">Hetero</label>
+	  				  <input name="orientation" type="radio" id="bisexual" value="Bisexual" <% if session[:auth]['orientation'] == "Bisexual" %>
+  					 	<%= "checked" %>
+  					 <% end %> />
+	  				  <label for="bisexual">Bisexual</label>
+					  <input name="orientation" type="radio" id="homosexual" value="Homosexual" <% if session[:auth]['orientation'] == "Homosexual" %>
+  					 	<%= "checked" %>
+  					 <% end %>/>
+	  				  <label for="homosexual">Homosexual</label>
+				  </div>
+			  </div>
+			  <br>
+			  <div class="input-field inline">
+				  <label for="age">Age</label>
+				  <input id="age" type="text" name="age" value="<%= session[:auth]['age'] %>">
+			  </div>
+			  <div class="input-field inline">
+				 <label for="code">Zip code</label>
+				 <input id="code" type="text" name="zip_code" value="<%= session[:auth]['code'] %>">
+			 </div>
+			  <div class="input-field inline">
+			      <input type="checkbox" id="indeterminate-checkbox" name="localisable" />
+			      <label for="indeterminate-checkbox">Localisable</label>
+			  </div>
+			  <div class="row">
+				  <div class="input-field col s6">
+					 <textarea id="bio" class="materialize-textarea" data-length="200" maxlength="200" name="bio" value="<%= session[:auth]['bio'] %>"></textarea>
+					 <label for="bio">Bio</label>
+				</div>
+			  </div>
+			  <div class="row">
+				  <div class="input-field col s6">
+					<input id="interest" type="text" name="interest" class="validate" placeholder="Put your interest separate by a single space, ex: #love #you">
+					<label for="interest">Interest</label>
+				  </div>
+				  <div class="input-field col s6">
+					  <label for="min">Age range</label>
+  					<p class="range-field">
+  						<input type="range" id="min" min="18" max="100" name="min_age" />
+  				  	</p>
+  					<p class="range-field">
+  						<input type="range" id="max" min="18" max="100" name="max_age" />
+  				  	</p>
+  				</div>
+				</div>
+
+				<div class="row">
+					<div class="input-field col s6">
+						<label for="min_score">Score range</label>
+					   <p class="range-field">
+						   <input type="range" id="min_score" min="0" max="100" name="min_score" />
+					   </p>
+					   <label for="max_score">Score range</label>
+					   <p class="range-field">
+						   <input type="range" id="max_score" min="0" max="100" name="max_score" />
+					   </p>
+				   </div>
+				</div>
+
+				<div class="row">
+					<div class="input-field col s6">
+						<label for="min_loc">Location range</label>
+					   <p class="range-field">
+						   <input type="range" id="location" min="0" max="100" name="location" />
+					   </p>
+				   </div>
+				</div>
+
+			  <button class="btn waves-effect waves-light" type="submit" name="submit">Submit
+				 <i class="material-icons right">send</i>
+			 </button>
+			</form>
+		</div>
+	</div>
+
+	<!-- Modal Structure -->
+	<div id="modal2" class="modal">
+		<div class="modal-content">
+			<h2>Settings</h2>
+			<p>Modify my settings</p>
+			<form class="col s12" action="/update_settings" method="post">
+			  <div class="row">
+				<div class="input-field col s12">
+					<input id="email" type="email" name="email" class="validate">
+          			<label for="email">Email</label>
+				</div>
+				<div class="input-field col s6">
+					<input id="first_name" type="text" name="firstname" class="validate">
+			          <label for="first_name">First Name</label>
+				</div>
+				<div class="input-field col s6">
+					<input id="lastname" type="text" name="lastname" class="validate">
+			          <label for="lastname">Last Name</label>
+				</div>
+			  </div>
+			  <button class="btn waves-effect waves-light" type="submit" name="submit">Submit
+				 <i class="material-icons right">send</i>
+			 </button>
+			</form>
+		</div>
+	</div>
+
+	<!-- Modal Structure -->
+	<div id="modal3" class="modal">
+		<div class="modal-content">
+			<h2>My pictures</h2>
+			<p>Modify my pictures</p>
+			<form class="col s12" action="/update_images" method="post" enctype="multipart/form-data">
+				<div class="row">
+				    <ul class="collapsible" data-collapsible="accordion">
+				      <li>
+				        <div class="collapsible-header"><i class="material-icons">whatshot</i>Profile picture</div>
+				        <div class="collapsible-body"><span>
+							<img src="<%= session[:auth]['profile'] %>" alt="" height="300" width="300">
+							<div class="file-field input-field">
+						      <div class="btn">
+						        <span>File</span>
+						        <input type="file" name="profile">
+						      </div>
+						      <div class="file-path-wrapper">
+						        <input class="file-path validate" type="text">
+						      </div>
+						    </div></span></div>
+				      </li>
+				      <li>
+				        <div class="collapsible-header"><i class="material-icons">whatshot</i>Second</div>
+				        <div class="collapsible-body"><span>
+							<img src="<%= session[:auth]['image2'] %>" alt="" height="300" width="300">
+							<div class="file-field input-field">
+						      <div class="btn">
+						        <span>File</span>
+						        <input type="file" name="image2">
+						      </div>
+						      <div class="file-path-wrapper">
+						        <input class="file-path validate" type="text">
+						      </div>
+						    </div></span></div>
+				      </li>
+				      <li>
+				        <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
+				        <div class="collapsible-body"><span>
+							<img src="<%= session[:auth]['image3'] %>" alt="" height="300" width="300">
+							<div class="file-field input-field">
+						      <div class="btn">
+						        <span>File</span>
+						        <input type="file" name="image3">
+						      </div>
+						      <div class="file-path-wrapper">
+						        <input class="file-path validate" type="text">
+						      </div>
+						    </div></span></div>
+				      </li>
+					  <li>
+				        <div class="collapsible-header"><i class="material-icons">whatshot</i>Fourth</div>
+				        <div class="collapsible-body"><span>
+							<img src="<%= session[:auth]['image4'] %>" alt="" height="300" width="300">
+							<div class="file-field input-field">
+						      <div class="btn">
+						        <span>File</span>
+						        <input type="file" name="image4">
+						      </div>
+						      <div class="file-path-wrapper">
+						        <input class="file-path validate" type="text">
+						      </div>
+						    </div></span></div>
+				      </li>
+					  <li>
+				        <div class="collapsible-header"><i class="material-icons">whatshot</i>Fifth</div>
+				        <div class="collapsible-body"><span>
+							<img src="<%= session[:auth]['image5'] %>" alt="" height="300" width="300">
+							<div class="file-field input-field">
+						      <div class="btn">
+						        <span>File</span>
+						        <input type="file" name="image5">
+						      </div>
+						      <div class="file-path-wrapper">
+						        <input class="file-path validate" type="text">
+						      </div>
+						    </div></span></div>
+				      </li>
+				    </ul>
+				</div>
+
+			  <button class="btn waves-effect waves-light" type="submit">Submit
+				 <i class="material-icons right">send</i>
+			 </button>
+			</form>
+		</div>
+	</div>
+
+	<!-- Container -->
+	<div class="row">
+	  <div class="col s2 white">
+		 <div class="row">
+		   <div class="col s6 m6">
+			 <div class="card">
+			   <div class="card-image">
+					<% if session[:auth]['profile'].nil? %>
+						<a href="#modal3"><img class="circle responsive-img" src="https://www.1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png" height="100" width="100"></a>
+					<% else %>
+						<a href="#modal3"><img class="circle responsive-img" src="<%= session[:auth]['profile'] %>" height="100" width="100"></a>
+					<% end %>
+					<input type="hidden" id="username" value="<%= session[:auth]['username'] %>">
+			   </div>
+			 </div>
+		   </div>
+		 </div>
+		<div class="collection">
+			<a href="/main/core" class="collection-item active"><i class="material-icons left">dashboard</i>Home</a>
+			<a class="modal-trigger collection-item" href="#modal1"><i class="material-icons left">perm_identity</i>My informations</a>
+			<a class="modal-trigger collection-item" href="#modal2"><i class="material-icons left">settings</i>Settings</a>
+			<a href="/users/log_out" class="collection-item"><i class="material-icons left">input</i>Log out</a>
+	    </div>
+	 </div>
+
+	 <div class="col s10 grey lighten-4 z-depth-2">
+			<div class="row">
+			   <!-- <div class="col s12 m12"> -->
+				 <div class="card">
+					 <div id="msgs"></div>
+				   <div class="card-image">
+					   <div class="container">
+						   <div class="row">
+						        <div class="col s7 m12">
+										<div class="carousel carousel-slider">
+											<% @images.each do |image| %>
+												<% if image.nil? %>
+													<a class="carousel-item" href=""><img src="https://www.1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png" id="image" height="500" width="200"></a>
+												<% else %>
+													<a class="carousel-item" href=""><img src="<%= image %>" id="image" height="500" width="200"></a>
+												<% end %>
+											<% end %>
+											<div id="username" value="<%= session[:auth]['username'] %>"></div>
+	  		   						 		</div>
+						        </div>
+   						        <div class="col s12 m12">
+   						          <div class="card">
+   						            <% if @user['localisable'] == 1 %>
+	   						            <% coords = @user['location'].split(",") %>
+											<iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=<%= coords[0] %>%2C<%= coords[1] %>&key=AIzaSyD5YZM3Low-a37h2bV9USGYrnvsjq2kxpA " allowfullscreen></iframe>
+									<% end %>
+   						            </div>
+   						          </div>
+   						        </div>
+							</div>
+
+					   </div>
+				   </div>
+				   <div class="card-content">
+					   <div class="fixed-action-btn floating horizontal" style="bottom: 0px; right: 0px; position:static;">
+						  <a class="btn-floating btn-large red">
+							<i class="large material-icons">mode_edit</i>
+						  </a>
+						  <ul style="left: 24px; position:static;">
+							  <% if !@me['profile'].nil? %>
+							  	<li><a href="/main/like_user/<%= @user['id'] %>" id="like" class="btn-floating green"><i class="material-icons">thumb_up</i></a></li>
+						  	  <% else %>
+							  	<li><a href="/main/like_user/<%= @user['id'] %>" id="like" class="btn-floating green"><i class="material-icons">thumb_up</i></a></li>
+							  <% end %>
+							  <li><a href="/main/report_user/<%= @user['id'] %>" class="btn-floating yellow darken-1"><i class="material-icons">assignment_late</i></a></li>
+							  <li><a href="/main/block_user/<%= @user['id'] %>" class="btn-floating red"><i class="material-icons">visibility_off</i></a></li>
+							   <% if @match && session[:auth]['id'] != @user['id'] %>
+									<li><a href="<%= @match %>" class="btn-floating blue"><i class="material-icons">chat_bubble</i></a></li>
+							   <% end %>
+						  </ul>
+						</div>
+					   <h2><%= @user['firstname'] %> <%= @user['lastname'] %></h2>
+					   <h4>@<%= @user['username'] %> | <%= @user['score'] %> matcha's</h4>
+					   <input type="hidden" id="username2" value="<%= @user['username'] %>">
+					  	<% if @user['online'] == 1 %>
+					   		 <span class="new badge" data-badge-caption="online"></span>
+						 <% else %>
+							 <span class="new badge" data-badge-caption="last connexion: <%= @user['connected'] %>"></span>
+						<% end %>
+					   <a class="waves-effect waves-light btn" href="#"><%= @user['sexe'] %></a>
+					   <a class="waves-effect waves-light btn" href="#"><%= @user['orientation'] %></a>
+
+					   <br>
+					   <br>
+					   <% @interest.each do |interest| %>
+					   	<div class="chip"><%= interest %></div></span>
+					   <% end %>
+					   <br>
+					   <br>
+					 	<p><%= @user['bio'] %></p>
+
+				   </div>
+				 <!-- </div> -->
+			   </div>
+			   <% if @id == session[:auth]['id'].to_s %>
+	   			<div class="row">
+	   				<h3>Matched with</h3>
+	   				<hr>
+					<% @matched_with.each do |matched| %>
+	   				 <div class="col s3">
+	   					 <div class="row">
+	   					   <div class="col s3 m12">
+	   						 <div class="card">
+	   						   <div class="card-content">
+								   <% if matched['username1'] == session[:auth]['username'] %>
+								   		<h4><%= matched['username2'] %></h4>
+									<% else %>
+										<h4><%= matched['username1'] %></h4>
+									<% end %>
+	   							 <p>Congratulation ! You guy's have a matched !</p>
+	   							 <br>
+								 <% if matched['username1'] == session[:auth]['username'] %>
+	   							 	<a href="/main/chat/<%= matched['username2'] %>/<%= session[:auth]['username'] %>" class="waves-effect waves-light btn">Chat now !</a>
+								<% else %>
+									<a href="/main/chat/<%= matched['username1'] %>/<%= session[:auth]['username'] %>" class="waves-effect waves-light btn">Chat now !</a>
+								<% end %>
+	   						   </div>
+	   						 </div>
+	   					   </div>
+	   					 </div>
+	   				 </div>
+					 <% end %>
+					<% end %>
+	   			</div>
+			   <% if @id == session[:auth]['id'].to_s %>
+	   			<div class="row">
+	   				<h3>Liked by</h3>
+	   				<hr>
+	   				<% @liked_by.each do |user| %>
+	   				<% coords = user['location'].split(",") %>
+	   				 <div class="col s3">
+	   					 <div class="row">
+	   					   <div class="col s3 m12">
+	   						 <div class="card">
+	   						   <div class="card-image">
+	   							   <div class="carousel carousel-slider">
+	   							     <a class="carousel-item" href="/main/profile/<%= user['id'] %>"><img src="<%= user['profile'] %>" height="400"></a>
+	   							     <a class="carousel-item" href="/main/profile/<%= user['id'] %>"><img src="<%= user['image2'] %>" height="400"></a>
+	   							     <a class="carousel-item" href="/main/profile/<%= user['id'] %>"><img src="<%= user['image3'] %>" height="400"></a>
+	   							     <a class="carousel-item" href="/main/profile/<%= user['id'] %>"><img src="<%= user['image4'] %>" height="400"></a>
+	   							     <a class="carousel-item" href="/main/profile/<%= user['id'] %>"><img src="<%= user['image5'] %>" height="400"></a>
+	   							   </div>
+	   							 <span class="card-title"><%= user['username'] %></span>
+	   						   </div>
+	   						   <div class="card-content">
+	   							   <h4><%= user['firstname'] %> <%= user['lastname'] %></h4>
+	   							   <span class="new badge" data-badge-caption="<%= user['sexe'] %>"></span>
+	   							   <span class="new badge" data-badge-caption="<%= user['orientation'] %>"></span>
+	   							   <% if distance(@coords[0].to_f, @coords[1].to_f, coords[0].to_f, coords[1].to_f) < 0 %>
+									   <p>1 km</p>
+								   <% else %>
+								   		<p><%= distance(@coords[0].to_f, @coords[1].to_f, coords[0].to_f, coords[1].to_f).to_i %> km</p>
+								   <% end %>
+	   							 <p><%= user['bio'] %></p>
+	   							 <br>
+	   							 <a href="/main/profile/<%= user['id'] %>" class="waves-effect waves-light btn">Profile page</a>
+	   						   </div>
+	   						 </div>
+	   					   </div>
+	   					 </div>
+	   				 </div>
+	   				<% end %>
+	   			</div>
+	   		<% end %>
+			<% if @id == session[:auth]['id'].to_s %>
+				<div class="row">
+					<h2>Visited by</h2>
+					<hr>
+					<% @visited_by.each do |user| %>
+					<% coords = user['location'].split(",") %>
+					<div class="col s3">
+						<div class="row">
+						  <div class="col s3 m12">
+							<div class="card">
+							  <div class="card-image">
+								  <div class="carousel carousel-slider">
+									<a class="carousel-item" href="/main/profile/<%= user['id'] %>"><img src="<%= user['profile'] %>" height="400"></a>
+									<a class="carousel-item" href="/main/profile/<%= user['id'] %>"><img src="<%= user['image2'] %>" height="400"></a>
+									<a class="carousel-item" href="/main/profile/<%= user['id'] %>"><img src="<%= user['image3'] %>" height="400"></a>
+									<a class="carousel-item" href="/main/profile/<%= user['id'] %>"><img src="<%= user['image4'] %>" height="400"></a>
+									<a class="carousel-item" href="/main/profile/<%= user['id'] %>"><img src="<%= user['image5'] %>" height="400"></a>
+								  </div>
+								<span class="card-title"><%= user['username'] %></span>
+							  </div>
+							  <div class="card-content">
+								  <h4><%= user['firstname'] %> <%= user['lastname'] %></h4>
+								  <span class="new badge" data-badge-caption="<%= user['sexe'] %>"></span>
+								  <span class="new badge" data-badge-caption="<%= user['orientation'] %>"></span>
+								   <% if distance(@coords[0].to_f, @coords[1].to_f, coords[0].to_f, coords[1].to_f) < 0 %>
+									   <p>1 km</p>
+								   <% else %>
+								   		<p><%= distance(@coords[0].to_f, @coords[1].to_f, coords[0].to_f, coords[1].to_f).to_i %> km</p>
+								   <% end %>
+								<p><%= user['bio'] %></p>
+								<br>
+								<a href="/main/profile/<%= user['id'] %>" class="waves-effect waves-light btn">Profile page</a>
+							  </div>
+							</div>
+						  </div>
+						</div>
+					</div>
+					<% end %>
+				</div>
+				<% end %>
+			</div>
+	 </div>
+   </div>
+	<!-- end Container -->
+
+	<script type="text/javascript">
+	var username = document.getElementById("username")
+	var username2 = document.getElementById("username2")
+	var like = document.getElementById("like")
+	var image = document.getElementById("image")
+
+		window.onload = function(){
+		  (function()
+		  {
+			  var show = function(el)
+			  {
+				return function(msg)
+				{
+					var splited = msg.split(",");
+					if (username.value != splited[1] && image.src != "https://www.1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png")
+					{
+						el.innerHTML = '<span class="new badge" data-badge-caption="You have a new notification pending"></span>';
+					}
+				}
+			  }(document.getElementById('msgs'));
+
+			var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+			ws.onopen
+			ws.onclose
+			ws.onmessage = function(m) { show(m.data); };
+
+              like.onclick = function()
+			  {
+			  	var array = ["Hello", username.value];
+			  	ws.send(array);
+              }
+
+		  })();
+		}
+	</script>

@@ -1,0 +1,66 @@
+<header>
+	<!-- Navbar -->
+	<nav>
+	  <div class="nav-wrapper">
+		<a href="#!" class="brand-logo">Matcha - Sign in</a>
+		<ul class="right hide-on-med-and-down">
+			<li><a href="/"><i class="material-icons left">dashboard</i>Home</a></li>
+			<li><a href="/users/sign_up"><i class="material-icons left">supervisor_account</i>Sign up</a></li>
+		</ul>
+	  </div>
+	</nav>
+	<!-- end Navbar -->
+</header>
+
+<br>
+<br>
+
+<main>
+	<!-- Container -->
+	<div class="container">
+
+		<% flash.each do |flash| %>
+			<p><%= flash[1] %><p>
+		<% end %>
+
+		<!-- Card -->
+		<div class="row">
+	        <div class="col s12 m12">
+	          <div class="card">
+	            <div class="card-content black-text">
+					<h2>Sign in</h2>
+					<br>
+
+					<!-- Form -->
+					<div class="row">
+		  		  		<form class="col s12" action="/users/sign_in" method="post">
+		  		  		  <div class="row">
+		  		  		    <div class="input-field col s6">
+		  		  		      <input id="first_name" type="text" name="username" class="validate">
+		  		  		      <label for="first_name">Username</label>
+		  		  		    </div>
+		  		  		    <div class="input-field col s6">
+		  		  		      <input id="last_name" type="password" name="password" class="validate">
+		  		  		      <label for="last_name">Password</label>
+		  		  		    </div>
+		  		  		  </div>
+						 <button class="btn waves-effect waves-light" type="submit" name="submit">Submit
+							 <i class="material-icons right">send</i>
+						 </button>
+		  		  		</form>
+		  		  	</div>
+					<!-- end Form -->
+	            </div>
+	            <div class="card-action">
+	              <a href="/">Home</a>
+				  <a href="/users/sign_up">Sign up</a>
+				  <a href="/users/forget/email">Forget my password</a>
+				  <a href="/users/resend">Resend email confirmation</a>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+		  <!-- end Card -->
+	</div>
+	<!-- end Container -->
+</main>

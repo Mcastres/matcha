@@ -1,0 +1,87 @@
+<header>
+	<!-- Navbar -->
+	<nav>
+	  <div class="nav-wrapper">
+		<a href="#!" class="brand-logo">Matcha - Sign up</a>
+		<ul class="right hide-on-med-and-down">
+			<li><a href="/"><i class="material-icons left">dashboard</i>Home</a></li>
+			<li><a href="/users/sign_in"><i class="material-icons left">perm_identity</i>Sign in</a></li>
+		</ul>
+	  </div>
+	</nav>
+	<!-- end Navbar -->
+</header>
+
+<br>
+<br>
+
+<main>
+	<!-- Container -->
+	<div class="container">
+
+		<% flash.each do |flash| %>
+			<p><%= flash[1] %><p>
+		<% end %>
+
+		<!-- Card -->
+		<div class="row">
+	        <div class="col s12 m12">
+	          <div class="card">
+	            <div class="card-content black-text">
+					<h2>Sign up</h2>
+					<br>
+
+					<!-- Form -->
+					<div class="row">
+		  		  		<form class="col s12" action="/users/sign_up" method="post">
+		  		  		  <div class="row">
+		  		  		    <div class="input-field col s6">
+		  		  		      <input id="first_name" type="text" name="firstname" class="validate">
+		  		  		      <label for="first_name">First Name</label>
+		  		  		    </div>
+		  		  		    <div class="input-field col s6">
+		  		  		      <input id="last_name" type="text" name="lastname" class="validate">
+		  		  		      <label for="last_name">Last Name</label>
+		  		  		    </div>
+		  		  		  </div>
+		  		  		  <div class="row">
+		  		  			  <div class="input-field col s6">
+		  		  	  	      <input id="username" type="text" name="username" class="validate">
+		  		  	  	      <label for="username">Username</label>
+		  		  	  	    </div>
+		  		  		  </div>
+		  		  		  <div class="row">
+		  		  		   <div class="input-field col s12">
+		  		  			 <input id="email" type="email" name="email" class="validate">
+		  		  			 <label for="email">Email</label>
+		  		  		   </div>
+		  		  		 </div>
+		  		  		  <div class="row">
+		  		  		    <div class="input-field col s12">
+		  		  		      <input placeholder="Chose a dificult one" id="password" type="password" name="password" class="validate">
+		  		  		      <label for="password">Password</label>
+		  		  		    </div>
+		  		  			<div class="input-field col s12">
+		  		  		      <input id="password" type="password" name="confirm_password" class="validate">
+		  		  		      <label for="password">Confirm password</label>
+		  		  		    </div>
+		  		  		  </div>
+						  <button class="btn waves-effect waves-light" type="submit" name="submit">Submit
+ 							 <i class="material-icons right">send</i>
+ 						 </button>
+		  		  		</form>
+		  		  	</div>
+					<!-- end Form -->
+	            </div>
+	            <div class="card-action">
+	              <a href="/">Home</a>
+	              <a href="/users/sign_in">Sign in</a>
+				  <a href="/users/resend">Resend email confirmation</a>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+		  <!-- end Card -->
+	</div>
+	<!-- end Container -->
+</main>

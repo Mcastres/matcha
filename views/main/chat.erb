@@ -1,0 +1,382 @@
+<nav>
+  <div class="nav-wrapper">
+	<a href="#!" class="brand-logo">Matcha - Core</a>
+	<ul class="right hide-on-med-and-down">
+		<!-- Dropdown Trigger -->
+		  <a class='dropdown-button btn' href='' <% if !@new %> onclick="window.location.reload(true)" <% end %> data-activates='dropdown1'>
+		  <% if @new %>
+			  <span class="new badge" data-badge-caption="New notifications"></span>
+		  <% else %>
+			  Notifications
+ 		  <% end %></a>
+
+		<!-- Dropdown Structure -->
+		<ul id='dropdown1' class='dropdown-content'>
+			<% @notifications.each do |notif| %>
+			  <li><a href="<%= notif['link'] %>"><%= notif['notification'] %></a></li>
+			<% end %>
+		</ul>
+		<li><a href="/users/log_out"><i class="material-icons left">input</i>Log out</a></li>
+	</ul>
+  </div>
+</nav>
+
+
+<% flash.each do |flash| %>
+	<p><%= flash[1] %><p>
+<% end %>
+
+<!-- Modal Structure -->
+<div id="modal1" class="modal">
+	<div class="modal-content">
+		<h2>My informations</h2>
+		<p>Modify my informations</p>
+		<form class="col s12" action="/update_info" method="post">
+		  <div class="row">
+			<div class="input-field col s6">
+				<h5>Sexe</h5>
+				<input name="sexe" type="radio" id="men" value="men" <% if session[:auth]['sexe'] == "men" %>
+				  <%= "checked" %>
+			   <% end %>/>
+				<label for="men">Men</label>
+				<input name="sexe" type="radio" id="women" value="women" <% if session[:auth]['sexe'] == "women" %>
+				  <%= "checked" %>
+			   <% end %>/>
+				<label for="women">Women</label>
+			</div>
+			<div class="input-field col s6">
+				<h5>Orientation</h5>
+
+				  <input name="orientation" type="radio" id="hetero" value="Hetero" <% if session[:auth]['orientation'] == "Hetero" %>
+					<%= "checked" %>
+				 <% end %>/>
+				  <label for="hetero">Hetero</label>
+				  <input name="orientation" type="radio" id="bisexual" value="Bisexual" <% if session[:auth]['orientation'] == "Bisexual" %>
+					<%= "checked" %>
+				 <% end %> />
+				  <label for="bisexual">Bisexual</label>
+				  <input name="orientation" type="radio" id="homosexual" value="Homosexual" <% if session[:auth]['orientation'] == "Homosexual" %>
+					<%= "checked" %>
+				 <% end %>/>
+				  <label for="homosexual">Homosexual</label>
+			  </div>
+		  </div>
+		  <br>
+		  <div class="input-field inline">
+			  <label for="age">Age</label>
+			  <input id="age" type="text" name="age" value="<%= session[:auth]['age'] %>">
+		  </div>
+		  <div class="input-field inline">
+			  <label for="code">Zip code</label>
+			  <input id="code" type="text" name="zip_code" value="<%= session[:auth]['code'] %>">
+		  </div>
+		  <div class="input-field inline">
+			      <input type="checkbox" id="indeterminate-checkbox" name="localisable" />
+			      <label for="indeterminate-checkbox">Localisable</label>
+			  </div>
+		  <div class="row">
+			  <div class="input-field col s6">
+				 <textarea id="bio" class="materialize-textarea" data-length="200" maxlength="200" name="bio" value="<%= session[:auth]['bio'] %>"></textarea>
+				 <label for="bio">Bio</label>
+			</div>
+		  </div>
+		  <div class="row">
+			  <div class="input-field col s6">
+				<input id="interest" type="text" name="interest" class="validate" placeholder="Put your interest separate by a single space, ex: #love #you">
+				<label for="interest">Interest</label>
+			  </div>
+			  <div class="input-field col s6">
+				  <label for="min">Age range</label>
+				<p class="range-field">
+					<input type="range" id="min" min="18" max="100" name="min_age" />
+				</p>
+				<p class="range-field">
+					<input type="range" id="max" min="18" max="100" name="max_age" />
+				</p>
+			</div>
+			</div>
+
+			<div class="row">
+				<div class="input-field col s6">
+					<label for="min_score">Score range</label>
+				   <p class="range-field">
+					   <input type="range" id="min_score" min="0" max="100" name="min_score" />
+				   </p>
+				   <label for="max_score">Score range</label>
+				   <p class="range-field">
+					   <input type="range" id="max_score" min="0" max="100" name="max_score" />
+				   </p>
+			   </div>
+			</div>
+
+			<div class="row">
+				<div class="input-field col s6">
+					<label for="min_loc">Location range</label>
+				   <p class="range-field">
+					   <input type="range" id="location" min="0" max="100" name="location" />
+				   </p>
+			   </div>
+			</div>
+
+		  <button class="btn waves-effect waves-light" type="submit" name="submit">Submit
+			 <i class="material-icons right">send</i>
+		 </button>
+		</form>
+	</div>
+</div>
+
+<!-- Modal Structure -->
+<div id="modal2" class="modal">
+	<div class="modal-content">
+		<h2>Settings</h2>
+		<p>Modify my settings</p>
+		<form class="col s12" action="/update_settings" method="post">
+		  <div class="row">
+			<div class="input-field col s12">
+				<input id="email" type="email" name="email" class="validate">
+				<label for="email">Email</label>
+			</div>
+			<div class="input-field col s6">
+				<input id="first_name" type="text" name="firstname" class="validate">
+				  <label for="first_name">First Name</label>
+			</div>
+			<div class="input-field col s6">
+				<input id="lastname" type="text" name="lastname" class="validate">
+				  <label for="lastname">Last Name</label>
+			</div>
+		  </div>
+		  <button class="btn waves-effect waves-light" type="submit" name="submit">Submit
+			 <i class="material-icons right">send</i>
+		 </button>
+		</form>
+	</div>
+</div>
+
+<!-- Modal Structure -->
+<div id="modal3" class="modal">
+	<div class="modal-content">
+		<h2>My pictures</h2>
+		<p>Modify my pictures</p>
+		<form class="col s12" action="/update_images" method="post" enctype="multipart/form-data">
+			<div class="row">
+				<ul class="collapsible" data-collapsible="accordion">
+				  <li>
+					<div class="collapsible-header"><i class="material-icons">whatshot</i>Profile picture</div>
+					<div class="collapsible-body"><span>
+						<img src="<%= session[:auth]['profile'] %>" alt="" height="300" width="300">
+						<div class="file-field input-field">
+						  <div class="btn">
+							<span>File</span>
+							<input type="file" name="profile">
+						  </div>
+						  <div class="file-path-wrapper">
+							<input class="file-path validate" type="text">
+						  </div>
+						</div></span></div>
+				  </li>
+				  <li>
+					<div class="collapsible-header"><i class="material-icons">whatshot</i>Second</div>
+					<div class="collapsible-body"><span>
+						<img src="<%= session[:auth]['image2'] %>" alt="" height="300" width="300">
+						<div class="file-field input-field">
+						  <div class="btn">
+							<span>File</span>
+							<input type="file" name="image2">
+						  </div>
+						  <div class="file-path-wrapper">
+							<input class="file-path validate" type="text">
+						  </div>
+						</div></span></div>
+				  </li>
+				  <li>
+					<div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
+					<div class="collapsible-body"><span>
+						<img src="<%= session[:auth]['image3'] %>" alt="" height="300" width="300">
+						<div class="file-field input-field">
+						  <div class="btn">
+							<span>File</span>
+							<input type="file" name="image3">
+						  </div>
+						  <div class="file-path-wrapper">
+							<input class="file-path validate" type="text">
+						  </div>
+						</div></span></div>
+				  </li>
+				  <li>
+					<div class="collapsible-header"><i class="material-icons">whatshot</i>Fourth</div>
+					<div class="collapsible-body"><span>
+						<img src="<%= session[:auth]['image4'] %>" alt="" height="300" width="300">
+						<div class="file-field input-field">
+						  <div class="btn">
+							<span>File</span>
+							<input type="file" name="image4">
+						  </div>
+						  <div class="file-path-wrapper">
+							<input class="file-path validate" type="text">
+						  </div>
+						</div></span></div>
+				  </li>
+				  <li>
+					<div class="collapsible-header"><i class="material-icons">whatshot</i>Fifth</div>
+					<div class="collapsible-body"><span>
+						<img src="<%= session[:auth]['image5'] %>" alt="" height="300" width="300">
+						<div class="file-field input-field">
+						  <div class="btn">
+							<span>File</span>
+							<input type="file" name="image5">
+						  </div>
+						  <div class="file-path-wrapper">
+							<input class="file-path validate" type="text">
+						  </div>
+						</div></span></div>
+				  </li>
+				</ul>
+			</div>
+
+		  <button class="btn waves-effect waves-light" type="submit">Submit
+			 <i class="material-icons right">send</i>
+		 </button>
+		</form>
+	</div>
+</div>
+
+
+<div class="row">
+  <div class="col s2 white">
+	 <div class="row">
+	   <div class="col s6 m6">
+		 <div class="card">
+		   <div class="card-image">
+			 	<a href="#modal3"><img class="circle responsive-img" src="<%= session[:auth]['profile'] %>" height="100" width="100"></a>
+		   </div>
+		 </div>
+	   </div>
+	 </div>
+	<div class="collection">
+		<a href="/main/core" class="collection-item active"><i class="material-icons left">dashboard</i>Home</a>
+		<a class="modal-trigger collection-item" href="#modal1"><i class="material-icons left">perm_identity</i>My informations</a>
+		<a class="modal-trigger collection-item" href="#modal2"><i class="material-icons left">settings</i>Settings</a>
+		<a href="/users/log_out" class="collection-item"><i class="material-icons left">input</i>Log out</a>
+	</div>
+</div>
+
+ <div class="col s10 grey lighten-4 z-depth-2">
+	 <div class="row">
+		<div class="col s12 m12">
+		</div>
+		<div class="row">
+        <div class="col s12 m12">
+          <div class="card lighten-4">
+
+	     <a class="carousel-item" href="/main/profile/<%= @user3_id %>"><img src="<%= @username3 %>" height="400" width="400"></a>
+            <div class="card-content white-text">
+			<% if @msg %>
+				<% @msg.each do |msg| %>
+				<% if !msg.empty? %>
+					<% if msg[0] == session[:auth]['id'].to_s %>
+						<div class="container" style="text-align: right;">
+							<div class="chip">
+							  <img src="<%= session[:auth]['profile'] %>" alt="Contact Person">
+							  <%= msg[1, msg.length] %>
+							</div>
+						</div>
+					<% else %>
+					<div class="container">
+							<div class="chip">
+							  <img src="<%= @username3 %>" alt="Contact Person">
+							  <%= msg[1, msg.length] %>
+							</div>
+						</div>
+					<% end %>
+				<% end %>
+				<% end %>
+			<% end %>
+			<div class="container">
+				<div id="msgs" style="text-align: right;"></div>
+			</div>
+			</div>
+            <div class="card-action">
+			  <div class="row">
+				<form id="form" class="col s10" method="post" action="/add_message">
+				  <div class="row">
+					<div class="input-field col s12">
+					  <input id="input" type="text" name="msg" placeholder="Send a message">
+					  <input type="hidden" id="username1" name="username1" value="<%= @user1['username'] %>">
+					  <input type="hidden" id="username2" name="username2" value="<%= @user2['username'] %>">
+					  <input type="hidden" id="username3" value="<%= @user3_username %>">
+					  <input type="hidden" id="username4" value="<%= session[:auth]['username'] %>">
+					  <input type="hidden" id="image" value="<%= session[:auth]['profile'] %>">
+					  <input type="hidden" id="image2" value="<%= @username3 %>">
+					  <label for="msg">Message</label>
+					</div>
+					<button class="btn waves-effect waves-light" type="submit" name="submit">Submit
+						<i class="material-icons right">send</i>
+					</button>
+				  </div>
+				</form>
+			</div>
+            </div>
+          </div>
+        </div>
+      </div>
+		</div>
+	</div>
+ </div>
+
+ <script type="text/javascript">
+ var username3 = document.getElementById('username3');
+ var username4 = document.getElementById('username4');
+
+     window.onload = function(){
+       (function(){
+		   var show = function(el)
+		   {
+             return function(msg)
+			 {
+				var splited = msg.split(",");
+				console.log(image2.value);
+				if (username4.value == splited[1] && username3.value == splited[2] || username3.value == splited[1] && username4.value == splited[2])
+				{
+					if (username4.value == splited[1])
+					{
+						el.innerHTML = el.innerHTML + '<div class="chip" style="text-align: right;"> <img src="'+ image2.value + '" alt="Contact Person"> ' + splited[0] + '</div></br>';
+						el.style.cssText= 'text-align:left;';
+					}
+					else
+					{
+						el.innerHTML = el.innerHTML + '<div class="chip" style="text-align: right;"> <img src="'+ image.value + '" alt="Contact Person"> ' + splited[0] + '</div></br>';
+						el.style.cssText= 'text-align:right;';
+					}
+				}
+			  }
+           }(document.getElementById('msgs'));
+
+         var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+		 var image = document.getElementById('image');
+		 var image2 = document.getElementById('image2');
+		 ws.onopen
+		 ws.onclose
+		 ws.onmessage = function(m) { show(m.data); };
+
+         var sender = function(f){
+			 var input     = document.getElementById('input');
+			 var username1 = document.getElementById('username1');
+			 var username2 = document.getElementById('username2');
+
+           input.onclick = function(){ input.value = "" };
+           f.onsubmit    = function(){
+
+			var xmlhttp = new XMLHttpRequest();
+		    xmlhttp.open("POST", "http://localhost:3000/add_message", true);
+			xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		    xmlhttp.send("msg="+input.value+"&username1="+username1.value+"&username2="+username2.value);
+
+			var array = [input.value, username3.value, username4.value];
+			ws.send(array);
+			// location.reload();
+             return false;
+           }
+         }(document.getElementById('form'));
+       })();
+     }
+ </script>
