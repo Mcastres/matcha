@@ -7,6 +7,7 @@ class Matcha < Sinatra::Application
 
 	get "/setup" do
 
+
 		@@client.query("CREATE TABLE IF NOT EXISTS `users`
 							   (
 								 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -64,6 +65,9 @@ class Matcha < Sinatra::Application
 									 PRIMARY KEY (`id`)
 								   ) ENGINE=MyISAM DEFAULT CHARSET=utf8;")
 
+								  root = ::File.dirname(__FILE__).chomp("routes") + "public"
+								  Dir.mkdir(root) unless File.exists?(root)
+								  Dir.mkdir(root + "/images") unless File.exists?(root + "/images")
 		flash[:success] = 'Database and table successfuly created'
 		redirect "/"
 	end
