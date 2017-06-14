@@ -44,6 +44,11 @@ class Matcha < Sinatra::Application
 		return result / 1000;
 	end
 
+	def tag_count(users_tags, me_tags)
+		common_tags = users_tags & me_tags
+		return common_tags
+	end
+
 
 	#GET core
 	get "/main/core" do
@@ -55,7 +60,6 @@ class Matcha < Sinatra::Application
 		if @notifications[0]
 			@new = true
 		end
-
 
 		# ##### Filtre ultime
 		@users = @@client.query("SELECT id, username, location, age, sexe, orientation, score, mode FROM users ORDER BY score DESC").each(:as.to_s => :array)
@@ -87,7 +91,7 @@ class Matcha < Sinatra::Application
 							valid_users.push(user['username']) unless valid_users.include?(user['username'])
 						elsif ((@me['sexe'] == "men" && @me['orientation'] == "Homosexual" && user['sexe'] == "men" && user['orientation'] == "Homosexual") || (@me['sexe'] == "women" && @me['orientation'] == "Homosexual" && user['sexe'] == "women" && user['orientation'] == "Homosexual"))
 							valid_users.push(user['username']) unless valid_users.include?(user['username'])
-						elsif (@me['orientation'] == "Bisexual" && user['orientation'] == "Bisexual")
+						elsif (@me['orientation'] == "Bisexual")
 							valid_users.push(user['username']) unless valid_users.include?(user['username'])
 						end
 					end
@@ -465,7 +469,7 @@ class Matcha < Sinatra::Application
 
 	#POST update
 	post "/update_info" do
-		# params.inspect
+
 		sexe = h(params[:sexe])
 		orientation = h(params[:orientation])
 		bio = h(params[:bio])
@@ -532,6 +536,9 @@ class Matcha < Sinatra::Application
 		session[:auth]['bio'] = bio
 		session[:auth]['interest'] = interest
 		session[:auth]['age'] = age
+		session[:auth]['range_location'] = location
+		session[:auth]['range_age'] = range_age
+		session[:auth]['range_score'] = range_score
 
 		flash[:success] = 'Informations updated'
 		redirect "main/core"
@@ -556,12 +563,15 @@ class Matcha < Sinatra::Application
 		if !firstname.empty?
 			if firstname.length < 20
 				@@client.query("UPDATE users SET firstname = '#{firstname}' WHERE username = '#{session[:auth]['username']}'")
+				session[:auth]['firstname'] = firstname
+
 			end
 		end
 
 		if !lastname.empty?
 			if lastname.length < 20
 				@@client.query("UPDATE users SET lastname = '#{lastname}' WHERE username = '#{session[:auth]['username']}'")
+				session[:auth]['lastname'] = lastname
 			end
 		end
 
@@ -695,8 +705,6 @@ class Matcha < Sinatra::Application
 			compared.each do |img|
 				File.delete(img)
 			end
-
-			logfile = File.open(path_profile)
 
 			flash[:success] = 'Your images have been successfuly uploaded'
 			redirect "main/core"

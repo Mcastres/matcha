@@ -77,13 +77,13 @@
 			  </div>
 
 			  <div class="input-field inline">
-			      <input type="checkbox" id="indeterminate-checkbox" name="localisable" />
+			      <input type="checkbox" id="indeterminate-checkbox" name="localisable" checked="true" />
 			      <label for="indeterminate-checkbox">Localisable</label>
 			  </div>
 
 			  <div class="row">
 				  <div class="input-field col s6">
-					 <textarea id="bio" class="materialize-textarea" data-length="200" maxlength="200" name="bio" value='<%= session[:auth]['bio']  %>'></textarea>
+					 <textarea id="bio" class="materialize-textarea" data-length="200" maxlength="200" name="bio" ><%= session[:auth]['bio'] %></textarea>
 					 <label for="bio">Bio</label>
 				</div>
 			  </div>
@@ -93,7 +93,7 @@
 					<label for="interest">Interest</label>
 				  </div>
 				  <div class="input-field col s6">
-					  <label for="min">Age range</label>
+					  <label for="min">Age: actual range(<%= session[:auth]['range_age'] %>)</label>
   					<p class="range-field">
   						<input type="range" id="min" min="18" max="100" name="min_age" />
   				  	</p>
@@ -104,11 +104,10 @@
 				</div>
 				<div class="row">
 					<div class="input-field col s6">
-						<label for="min_score">Score range</label>
+						<label for="min_score">Score: actual range(<%= session[:auth]['range_score'] %>)</label>
 					   <p class="range-field">
 						   <input type="range" id="min_score" min="0" max="100" name="min_score" />
 					   </p>
-					   <label for="max_score">Score range</label>
 					   <p class="range-field">
 						   <input type="range" id="max_score" min="0" max="100" name="max_score" />
 					   </p>
@@ -117,7 +116,7 @@
 
 				<div class="row">
 					<div class="input-field col s6">
-						<label for="min_loc">Location range</label>
+						<label for="min_loc">Location: actual range(<%= session[:auth]['range_location'] %>)</label>
 					   <p class="range-field">
 						   <input type="range" id="location" min="0" max="100" name="location" />
 					   </p>
@@ -143,11 +142,11 @@
           			<label for="email">Email</label>
 				</div>
 				<div class="input-field col s6">
-					<input id="first_name" type="text" name="firstname" class="validate">
+					<input id="first_name" type="text" name="firstname" class="validate" value="<%= session[:auth]['firstname'] %>">
 			          <label for="first_name">First Name</label>
 				</div>
 				<div class="input-field col s6">
-					<input id="lastname" type="text" name="lastname" class="validate">
+					<input id="lastname" type="text" name="lastname" class="validate" value="<%= session[:auth]['lastname'] %>">
 			          <label for="lastname">Last Name</label>
 				</div>
 			  </div>
@@ -302,6 +301,9 @@
 							   		<p><%= distance(@coords[0].to_f, @coords[1].to_f, coords[0].to_f, coords[1].to_f).to_i %> km</p>
 							   <% end %>
 							 <p><%= user['bio'] %>.</p>
+							 <% tag_count(@me['interest'].split(","), user['interest'].split(",")).each do |tag| %>
+							 	<div class="chip"><%= tag %></div>
+							 <% end %>
 							 <br>
 							 <a href="/main/profile/<%= user['id'] %>" class="waves-effect waves-light btn">Profile page</a>
 						   </div>

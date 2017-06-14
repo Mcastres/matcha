@@ -145,7 +145,7 @@ class Matcha < Sinatra::Application
    				if find_password[0]['mode'] == 1
    					get_auth = @@client.query("SELECT * FROM users WHERE username = '#{username}'").each(:as.to_s => :array)
    					session[:auth] = get_auth[0]
-					session[:auth]['ip'] = request.ip
+
 					loc = location
 					loc = loc[0].to_s + "," + loc[1].to_s
 					@@client.query("UPDATE users SET online = 1, location = '#{loc}' WHERE username = '#{username}'")

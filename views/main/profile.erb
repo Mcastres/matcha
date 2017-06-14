@@ -64,24 +64,27 @@
   					 	<%= "checked" %>
   					 <% end %>/>
 	  				  <label for="homosexual">Homosexual</label>
-				  </div>
+				</div>
 			  </div>
 			  <br>
 			  <div class="input-field inline">
 				  <label for="age">Age</label>
 				  <input id="age" type="text" name="age" value="<%= session[:auth]['age'] %>">
 			  </div>
+
 			  <div class="input-field inline">
-				 <label for="code">Zip code</label>
-				 <input id="code" type="text" name="zip_code" value="<%= session[:auth]['code'] %>">
-			 </div>
+				  <label for="code">Zip code</label>
+				  <input id="code" type="text" name="zip_code" value="<%= session[:auth]['code'] %>">
+			  </div>
+
 			  <div class="input-field inline">
-			      <input type="checkbox" id="indeterminate-checkbox" name="localisable" />
+			      <input type="checkbox" id="indeterminate-checkbox" name="localisable" checked="true" />
 			      <label for="indeterminate-checkbox">Localisable</label>
 			  </div>
+
 			  <div class="row">
 				  <div class="input-field col s6">
-					 <textarea id="bio" class="materialize-textarea" data-length="200" maxlength="200" name="bio" value="<%= session[:auth]['bio'] %>"></textarea>
+					 <textarea id="bio" class="materialize-textarea" data-length="200" maxlength="200" name="bio" ><%= session[:auth]['bio'] %></textarea>
 					 <label for="bio">Bio</label>
 				</div>
 			  </div>
@@ -91,7 +94,7 @@
 					<label for="interest">Interest</label>
 				  </div>
 				  <div class="input-field col s6">
-					  <label for="min">Age range</label>
+					  <label for="min">Age: actual range(<%= session[:auth]['range_age'] %>)</label>
   					<p class="range-field">
   						<input type="range" id="min" min="18" max="100" name="min_age" />
   				  	</p>
@@ -100,14 +103,12 @@
   				  	</p>
   				</div>
 				</div>
-
 				<div class="row">
 					<div class="input-field col s6">
-						<label for="min_score">Score range</label>
+						<label for="min_score">Score: actual range(<%= session[:auth]['range_score'] %>)</label>
 					   <p class="range-field">
 						   <input type="range" id="min_score" min="0" max="100" name="min_score" />
 					   </p>
-					   <label for="max_score">Score range</label>
 					   <p class="range-field">
 						   <input type="range" id="max_score" min="0" max="100" name="max_score" />
 					   </p>
@@ -116,7 +117,7 @@
 
 				<div class="row">
 					<div class="input-field col s6">
-						<label for="min_loc">Location range</label>
+						<label for="min_loc">Location: actual range(<%= session[:auth]['range_location'] %>)</label>
 					   <p class="range-field">
 						   <input type="range" id="location" min="0" max="100" name="location" />
 					   </p>
@@ -129,6 +130,7 @@
 			</form>
 		</div>
 	</div>
+
 
 	<!-- Modal Structure -->
 	<div id="modal2" class="modal">
