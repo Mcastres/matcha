@@ -20,10 +20,11 @@ class Matcha < Sinatra::Application
 		tab = image.to_s.split(".")
 		if tab.count > 2
 			return 0
-		elsif extension.include? tab[1] == false
+		elsif !extension.include? tab[1]
 			return 0
+		else
+			return 1
 		end
-		return 1
 	end
 
 	def deg2rad(value)
@@ -171,7 +172,6 @@ class Matcha < Sinatra::Application
 					update_visited = @@client.query("UPDATE users SET visited_by = CONCAT(visited_by, '#{formated}') WHERE id = '#{session[:auth]['id']}'")
 
 					@@client.query("INSERT INTO `notifications` (username, notification, link) VALUES ('#{@user['username']}', '#{session[:auth]['username']} visited your profile', '/main/profile/#{session[:auth]['id'].to_s}')")
-
 				end
 			end
 		end
@@ -255,7 +255,7 @@ class Matcha < Sinatra::Application
 		end
 
 		#Like function
-		if i = 0
+		if i == 0
 			if session[:auth] && session[:auth]['id'].to_s != id.to_s && is_match.empty? && find_liked[0]['profile']
 				formated = "/" + id
 				update_liked = @@client.query("UPDATE users SET liked = CONCAT(liked, '#{formated}'), score = score + 1 WHERE username = '#{session[:auth]['username']}'")
@@ -336,7 +336,7 @@ class Matcha < Sinatra::Application
 		end
 
 		#Block function
-		if i = 0
+		if i == 0
 			if session[:auth] && session[:auth]['id'].to_s != id.to_s
 				formated = "/" + id
 				update_blocked = @@client.query("UPDATE users SET blocked = CONCAT(blocked, '#{formated}') WHERE username = '#{session[:auth]['username']}'")
@@ -568,8 +568,10 @@ class Matcha < Sinatra::Application
 		flash[:success] = 'Settings updated'
 		redirect "main/core"
 	end
-
+#
 	post "/update_images" do
+
+
 		extension = ["jpeg", "jpg", "png"]
 
 		root = ::File.dirname(__FILE__).chomp("routes") + "public/images/" + session[:auth]['id'].to_s
@@ -615,6 +617,11 @@ class Matcha < Sinatra::Application
 				File.open(path_profile, 'wb') do |f|
 					f.write(f_profile.read)
 				end
+				file1 = File.open(path_profile, 'rb') {|file| file.read }
+				if file1.include? '<?php'
+					File.delete(path_profile)
+					redirect_flash("Error", "danger", "/main/core")
+				end
 				@@client.query("UPDATE users SET profile = '#{name_p}' WHERE username = '#{session[:auth]['username']}'")
 				session[:auth]['profile'] = name_p
 			end
@@ -622,6 +629,11 @@ class Matcha < Sinatra::Application
 			if f_image2
 			   File.open(path_image2, 'wb') do |f|
 				   f.write(f_image2.read)
+			   end
+			   file2 = File.open(path_image2, 'rb') {|file| file.read }
+			   if file2.include? "<?php"
+				   File.delete(path_image2)
+				   redirect_flash("Error", "danger", "/main/core")
 			   end
 			   @@client.query("UPDATE users SET image2 = '#{name_2}' WHERE username = '#{session[:auth]['username']}'")
 			   session[:auth]['image2'] = name_2
@@ -631,6 +643,11 @@ class Matcha < Sinatra::Application
 				File.open(path_image3, 'wb') do |f|
 				  f.write(f_image3.read)
 			  	end
+				file3 = File.open(path_image3, 'rb') {|file| file.read }
+ 			   if file3.include? "<?php"
+ 				   File.delete(path_image3)
+ 				   redirect_flash("Error", "danger", "/main/core")
+ 			   end
 				@@client.query("UPDATE users SET image3 = '#{name_3}' WHERE username = '#{session[:auth]['username']}'")
 				session[:auth]['image3'] = name_3
 			end
@@ -639,6 +656,11 @@ class Matcha < Sinatra::Application
 				File.open(path_image4, 'wb') do |f|
 					f.write(f_image4.read)
 			 	end
+				file4 = File.open(path_image4, 'rb') {|file| file.read }
+ 			   if file4.include? "<?php"
+ 				   File.delete(path_image4)
+ 				   redirect_flash("Error", "danger", "/main/core")
+ 			   end
 				@@client.query("UPDATE users SET image4 = '#{name_4}' WHERE username = '#{session[:auth]['username']}'")
 				session[:auth]['image4'] = name_4
 			end
@@ -647,6 +669,11 @@ class Matcha < Sinatra::Application
 				File.open(path_image5, 'wb') do |f|
 					f.write(f_image5.read)
 				end
+				file5 = File.open(path_image5, 'rb') {|file| file.read }
+ 			   if file5.include? "<?php"
+ 				   File.delete(path_image5)
+ 				   redirect_flash("Error", "danger", "/main/core")
+ 			   end
 				@@client.query("UPDATE users SET image5 = '#{name_5}' WHERE username = '#{session[:auth]['username']}'")
 				session[:auth]['image'] = name_5
 			end
@@ -668,6 +695,8 @@ class Matcha < Sinatra::Application
 			compared.each do |img|
 				File.delete(img)
 			end
+
+			logfile = File.open(path_profile)
 
 			flash[:success] = 'Your images have been successfuly uploaded'
 			redirect "main/core"

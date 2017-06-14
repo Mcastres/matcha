@@ -50,7 +50,7 @@ class Matcha < Sinatra::Application
 									 `id` int(11) NOT NULL AUTO_INCREMENT,
 									 `username1` varchar(255) DEFAULT NULL,
 									 `username2` varchar(255) DEFAULT NULL,
-									 `chat` varchar(255) NOT NULL,
+									 `chat` varchar(3000) NOT NULL,
 									 PRIMARY KEY (`id`)
 								   ) ENGINE=MyISAM DEFAULT CHARSET=utf8;")
 
